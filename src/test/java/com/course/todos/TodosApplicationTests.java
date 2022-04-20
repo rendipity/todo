@@ -8,9 +8,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest("com.course.todos.TodosApplication")
@@ -18,6 +20,9 @@ class TodosApplicationTests {
 
     @Autowired
     TodoItemMapper todoItemMapper;
+
+    @Autowired
+    RedisTemplate redisTemplate;
     @Test
     public void todosQueryAll() {
         List<TodoItem> todoItems = todoItemMapper.queryAllItemByUserId(10);
@@ -55,17 +60,9 @@ class TodosApplicationTests {
         User user=todoItemMapper.queryPasswordByUsername("admin");
         System.out.println(user);
     }
-
     @Test
-    public void insertUser () {
-        int result=todoItemMapper.insertUser(new User(null,"root","root"));
-        System.out.println(result);
-    }
-    @Test
-    public void TokenTest (){
-        String result= JWTUtil.getToken(new User(10,"root","root"));
-        System.out.println(result);
-
+    public void redisTemplateTest(){
+        redisTemplate.opsForValue().set("key","value",1, TimeUnit.MINUTES);
     }
 }
 

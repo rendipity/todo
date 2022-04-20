@@ -33,25 +33,25 @@ public class ResponseResult<T> {
         return fail(null);
     }
 
-    public static <T> ResponseResult<T> requestError(T data){
+    public static <T> ResponseResult<T> fail400(T data){
         return ResponseResult.<T>builder()
                 .data(data)
                 .message(ResultStatus.HTTP_STATUS_400.getDescription())
                 .status(ResultStatus.HTTP_STATUS_400.getStatus())
                 .build();
     }
-    public static <T> ResponseResult<T> requestError(){
-        return requestError(null);
+    public static <T> ResponseResult<T> fail400(){
+        return fail400(null);
     }
 
-    public static <T> ResponseResult<T> authorizeError(T data){
+    public static <T> ResponseResult<T> fail401(T data){
         return ResponseResult.<T>builder()
                 .data(data)
                 .message(ResultStatus.HTTP_STATUS_401.getDescription())
                 .status(ResultStatus.HTTP_STATUS_401.getStatus())
                 .build();
     }
-    public static <T> ResponseResult<T> authorizeError(){
-        return authorizeError(null);
+    public static <T> ResponseResult<T> fail401(){
+        return fail401(null);
     }
 }

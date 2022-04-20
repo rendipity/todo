@@ -16,26 +16,26 @@ public class ItemController {
     @Autowired
     ItemService itemService;
     @GetMapping("/things")
-    public ResponseResult <List<TodoItem>> queryThings(@RequestAttribute User user){
+    public ResponseResult<Object>  queryThings(@RequestAttribute User user){
         System.out.println("queryThings执行了");
         if (user==null)
-            return ResponseResult.requestError();
+            return ResponseResult.fail401("用户名和密码不能为空");
         return ResponseResult.success(itemService.getAllItem(user));
     }
     @PostMapping("/things")
     public ResponseResult<String> addThings(@RequestAttribute User user,@RequestBody() TodoItem todoItem){
         System.out.println("addThings执行了");
-        return itemService.insertItem(user,todoItem)?ResponseResult.success():ResponseResult.fail();
+        return itemService.insertItem(user,todoItem)?ResponseResult.success("添加成功"):ResponseResult.fail("添加失败");
     }
     @PutMapping("/things")
     public ResponseResult<String> updateThings(@RequestAttribute User user, @RequestBody TodoItem todoItem){
         System.out.println("updateThings执行了");
         todoItem.setUserId(user.getId());
-        return itemService.updateItem(user,todoItem)?ResponseResult.success():ResponseResult.fail();
+        return itemService.updateItem(user,todoItem)?ResponseResult.success("修改成功"):ResponseResult.fail("修改失败");
     }
     @DeleteMapping("/things/{id}")
     public  ResponseResult<String> deleteThings(@RequestAttribute User user,@PathVariable("id") int id){
         System.out.println("deleteThings执行了");
-        return itemService.deleteItem(user,id)?ResponseResult.success():ResponseResult.fail();
+        return itemService.deleteItem(user,id)?ResponseResult.success("删除成功"):ResponseResult.fail("删除失败");
     }
 }
