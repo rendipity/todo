@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--接口全类名-->
+<mapper namespace="com.course.todos.DAO.TodoItemMapper">
+    <select id="queryAllItemByUserId" resultType="TodoItem">
+        select * from todoList where userId = #{userId}
+    </select>
+    <!--TodoItem queryItemById(@Param("id") int id);-->
+    <select id="queryItemById" resultType="TodoItem">
+        select * from todoList where id = #{id}
+    </select>
+    <!--int deleteItemById(@Param("id") int id);-->
+    <delete id="deleteItemById" >
+        delete from todoList where id=#{id}
+    </delete>
+    <!--int updateItem(TodoItem todoItem);-->
+    <update id="updateItem">
+        update todoList
+            <set>
+            <if test="things != null">
+                things = #{things},
+            </if>
+            <if test="state !=null">
+                state =#{state},
+            </if>
+            <if test="priority!=null">
+                priority= #{priority},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <!-- int insertItem(TodoItem todoItem);-->
+    <insert id="insertItem">
+        insert into todoList values(null,#{things},#{state},#{priority},#{userId});
+    </insert>
+    <!--String queryPasswordByUsername(@Param("userName") String userName);-->
+    <select id="queryPasswordByUsername" resultType="User">
+        select id,password from users where username=#{userName}
+    </select>
+    <!--int insertUser(User user);-->
+    <insert id="insertUser">
+        insert into users values(null,#{username},#{password})
+    </insert>
+</mapper>
