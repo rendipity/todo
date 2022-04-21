@@ -11,9 +11,6 @@ public class myInterceptorConfiguration implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new JwtInterceptor())
-                .addPathPatterns("/**")
-                .excludePathPatterns("/login")
-                .excludePathPatterns("/signup")
-                .excludePathPatterns("/verifyCode");
+                .addPathPatterns("/**").excludePathPatterns("/login","/verifyCode","/signup");
     }
 }

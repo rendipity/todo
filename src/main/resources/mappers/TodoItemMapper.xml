@@ -41,6 +41,6 @@
     </select>
     <!--int insertUser(User user);-->
     <insert id="insertUser">
-        insert into users values(null,#{username},#{password})
+        insert into users values(null,#{username},#{password},#{phone})
     </insert>
 </mapper>

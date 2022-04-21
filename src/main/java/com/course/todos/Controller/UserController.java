@@ -34,16 +34,16 @@ public class UserController {
     }
     @GetMapping("/verifyCode")
     public ResponseResult<String> verifyCode(@RequestParam(required = false) String phone){
-        if(phone.equals(""))
-            return ResponseResult.fail("手机号不能为空");
         return userService.sendVerifyCode(phone);
     }
     @PostMapping("/signup")
-    public ResponseResult<String> signup(@RequestBody User user){
+    public ResponseResult<String> signup(@RequestBody UserParam user){
         System.out.println(user);
-        if (user==null||user.getUsername()==null||user.getPassword()==null||user.getPhone()==null)
+        if (user==null||user.getUsername()==null||user.getPassword()==null)
             return ResponseResult.fail("用户名或密码不能为空");
-        return userService.signup(user)?ResponseResult.success("注册成功"):ResponseResult.success("注册失败，请重试");
+        else if (user.getVerifyCode()==null||user.getPhone()==null)
+            return ResponseResult.fail("信息不完整");
+        return userService.signup(user);
     }
     @RequestMapping("/validationTest")
     public ResponseResult <String> validationTest(@Valid @RequestBody UserParam userParam, BindingResult bindingResult){
