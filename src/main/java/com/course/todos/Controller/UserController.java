@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @RestController
 public class UserController {
@@ -21,7 +23,7 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @PostMapping("/login")
+    @PostMapping("user/login")
     public ResponseResult<String> login(@RequestBody User user){
         System.out.println(user);
         if (user.getUsername()==null||user.getPassword()==null)
@@ -32,11 +34,11 @@ public class UserController {
         else
             return ResponseResult.success(JWTUtil.getToken(user));
     }
-    @GetMapping("/verifyCode")
+    @GetMapping("user/verifyCode")
     public ResponseResult<String> verifyCode(@RequestParam(required = false) String phone){
         return userService.sendVerifyCode(phone);
     }
-    @PostMapping("/signup")
+    @PostMapping("user/signup")
     public ResponseResult<String> signup(@RequestBody UserParam user){
         System.out.println(user);
         if (user==null||user.getUsername()==null||user.getPassword()==null)
@@ -45,18 +47,4 @@ public class UserController {
             return ResponseResult.fail("信息不完整");
         return userService.signup(user);
     }
-    @RequestMapping("/validationTest")
-    public ResponseResult <String> validationTest(@Valid @RequestBody UserParam userParam, BindingResult bindingResult){
-        System.out.println(userParam);
-        if (bindingResult.hasErrors()){
-            List<ObjectError> errors = bindingResult.getAllErrors();
-            for (ObjectError error: errors){
-                System.out.println(error);
-            }
-            return ResponseResult.fail("invalid parameter");
-        }
-        return ResponseResult.success();
-    }
-
-
 }

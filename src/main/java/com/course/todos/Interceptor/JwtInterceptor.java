@@ -3,18 +3,25 @@ package com.course.todos.Interceptor;
 import com.course.todos.Util.JWTUtil;
 import com.course.todos.entity.Result.ResponseResult;
 import com.course.todos.entity.User;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Enumeration;
 
 public class JwtInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        System.out.println(request.getMethod());
+        if (request.getMethod().equals(HttpMethod.OPTIONS.toString())){
+            System.out.println("OPTIONS请求放行了");
+            return true;
+        }
         System.out.println("拦截器执行了");
-        String token=request.getHeader("Authorization");
+        String token=request.getHeader("authorization");
         User user=JWTUtil.verify(token);
         if (user==null) {
             doResponse(response,ResponseResult.fail("身份验证已过期,请重新登录!"));

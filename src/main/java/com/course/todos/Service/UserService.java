@@ -49,14 +49,20 @@ public class UserService {
     public ResponseResult<String> signup(UserParam user){
         String tryCountKey=user.getPhone()+"TryCount";
         String verifyCodeKey=user.getPhone()+"VerifyCode";
+        if (redisTemplate.opsForValue().get(tryCountKey)==null)
+             return ResponseResult.fail("验证码已失效");
         //验证码被删除提示
-        if (!checkVerifyCode(user.getPhone(), user.getVerifyCode())){
+        if (!checkVerifyCode(verifyCodeKey, user.getVerifyCode())){
             //更新验证次数
             updateTryCount(user.getPhone());
-            return ResponseResult.fail("验证码错误");
+            return ResponseResult.fail("验证码不正确");
         }
-        todoItemMapper.insertUser(new User(null,user.getUsername(), user.getPassword(), user.getPhone()));
-        deleteVerifyCode();
+        try {
+            todoItemMapper.insertUser(new User(null,user.getUsername(), user.getPassword(), user.getPhone()));
+            deleteVerifyCode(user.getPhone());
+        }catch (Exception e){
+            return ResponseResult.fail("用户名已经存在");
+        }
         return ResponseResult.success("注册成功");
     }
     private Boolean send(int code,String phone) throws Exception{
@@ -85,8 +91,7 @@ public class UserService {
         redisTemplate.opsForList().leftPush(verifyCodeKey,code);
         redisTemplate.expire(verifyCodeKey,5,TimeUnit.MINUTES);
     }
-    private Boolean checkVerifyCode(String phone,Integer verifyCode){
-        String verifyCodeKey=phone+"VerifyCode";
+    private Boolean checkVerifyCode(String verifyCodeKey,Integer verifyCode){
         List<Integer> codes=redisTemplate.opsForList().range(verifyCodeKey,0,5);
         if (codes==null)
             return false;
@@ -97,9 +102,17 @@ public class UserService {
         return false;
     }
     private void updateTryCount(String phone){
-
+        String tryCountKey=phone+"TryCount";
+        System.out.println(redisTemplate.opsForValue().get(tryCountKey));
+        if ((Integer)redisTemplate.opsForValue().get(tryCountKey)>=2)
+            deleteVerifyCode(phone);
+        else
+            redisTemplate.opsForValue().increment(tryCountKey);
     }
-    private void deleteVerifyCode(){
-
-    };
+    private void deleteVerifyCode(String phone){
+        String tryCountKey=phone+"TryCount";
+        String verifyCodeKey=phone+"VerifyCode";
+        redisTemplate.delete(tryCountKey);
+        redisTemplate.delete(verifyCodeKey);
+    }
 }
