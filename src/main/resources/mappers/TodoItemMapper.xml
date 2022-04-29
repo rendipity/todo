@@ -7,6 +7,14 @@
     <select id="queryAllItemByUserId" resultType="TodoItem">
         select * from todoList where userId = #{userId}
     </select>
+    <!--List<TodoItem> queryWeekItemByUserId(@Param("userId") String userId);-->
+    <select id="queryWeekItemByUserId" resultType="TodoItem">
+        select * from todoList where userId= #{userId} and time between Date_sub(Date(now()),interval 1 week)and Date(now());
+    </select>
+    <!--List<TodoItem> queryDayItemByUserId(@Param("userId") String userId);-->
+    <select id="queryDayItemByUserId" resultType="TodoItem">
+        select * from todoList where userId= #{userId} and time =Date(now())
+    </select>
     <!--TodoItem queryItemById(@Param("id") int id);-->
     <select id="queryItemById" resultType="TodoItem">
         select * from todoList where id = #{id}
@@ -23,24 +31,26 @@
                 things = #{things},
             </if>
             <if test="state !=null">
-                state =#{state},
+                state = #{state},
             </if>
-            <if test="priority!=null">
-                priority= #{priority},
+            <if test="Time != null">
+                Time = #{Time}
             </if>
         </set>
-        where id = #{id}
+        where id = #{id} and userId=#{userId}
     </update>
     <!-- int insertItem(TodoItem todoItem);-->
     <insert id="insertItem">
-        insert into todoList values(null,#{things},#{state},#{priority},#{userId});
+        insert into todoList values(#{id},#{things},#{state},#{userId},#{Time});
     </insert>
+
     <!--String queryPasswordByUsername(@Param("userName") String userName);-->
     <select id="queryPasswordByUsername" resultType="User">
         select id,password from users where username=#{userName}
     </select>
+
     <!--int insertUser(User user);-->
     <insert id="insertUser">
-        insert into users values(null,#{username},#{password},#{phone})
+        insert into users values(#{id},#{username},#{password},#{phone})
     </insert>
 </mapper>

@@ -7,16 +7,21 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 @Repository
 public interface TodoItemMapper {
 
-    List<TodoItem> queryAllItemByUserId(@Param("userId") int userId);
+    List<TodoItem> queryAllItemByUserId(@Param("userId") String userId);
 
-    TodoItem queryItemById(@Param("id") int id);
+    List<TodoItem> queryWeekItemByUserId(@Param("userId") String userId);
 
-    int deleteItemById(@Param("id") int id);
+    List<TodoItem> queryDayItemByUserId(@Param("userId") String userId);
+
+    TodoItem queryItemById(@Param("id") String id);
+
+    int deleteItemById(@Param("id") String id);
 
     int updateItem(TodoItem todoItem);
 

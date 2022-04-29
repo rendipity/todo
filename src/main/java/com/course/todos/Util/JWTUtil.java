@@ -30,12 +30,12 @@ public class JWTUtil {
         try{
             Jws<Claims> claimsJws = jwtParser.parseClaimsJws(token);
             Claims body = claimsJws.getBody();
-            Integer id=body.get("id", Integer.class);
+            String id=body.get("id", String.class);
             String username=body.get("username",String.class);
             return new User(id,username,null,null);
         }catch (Exception e){
             System.out.println("出异常了");
-            //e.printStackTrace();
+            e.printStackTrace();
             return null;
         }
     }

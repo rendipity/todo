@@ -58,9 +58,10 @@ public class UserService {
             return ResponseResult.fail("验证码不正确");
         }
         try {
-            todoItemMapper.insertUser(new User(null,user.getUsername(), user.getPassword(), user.getPhone()));
+            todoItemMapper.insertUser(new User(user.getId(),user.getUsername(), user.getPassword(), user.getPhone()));
             deleteVerifyCode(user.getPhone());
         }catch (Exception e){
+            System.out.println(e);
             return ResponseResult.fail("用户名已经存在");
         }
         return ResponseResult.success("注册成功");

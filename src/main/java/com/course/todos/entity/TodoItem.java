@@ -10,9 +10,9 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class TodoItem {
-    private Integer id;
+    private String id;
     private String things;
-    String state;
-    String priority;
-    int userId;
+    private String state;
+    private String userId;
+    private String Time;
 }

@@ -5,13 +5,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+@Data
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
-@Data
-public class User {
-    private String id;
-    private String username;
-    private String password;
-    private String phone;
+public class TimeParam {
+    private String time1;
+    private String time2;
+
 }
